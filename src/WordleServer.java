@@ -10,9 +10,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
-public class WordleServer extends Thread {
-
+public class WordleServer extends Thread
+{
     private ServerSocket serverSocket;
     private int port;
     private boolean running = false;
@@ -21,70 +24,83 @@ public class WordleServer extends Thread {
         this.port = port;
     }
 
-    public void startServer() {
-        try {
+    public void startServer( )
+    {
+        try
+        {
             serverSocket = new ServerSocket( port );
-            this.start();
-        } catch (IOException e) {
-            e.printStackTrace();
+            this.start( );
+        }
+
+        catch (IOException e)
+        {
+            e.printStackTrace( );
         }
     }
 
-    public void stopServer() {
+    public void stopServer( )
+    {
         running = false;
-        this.interrupt();
+        this.interrupt( );
     }
 
     @Override
-    public void run() {
+    public void run( )
+    {
         running = true;
         while( running ) {
-            try {
+            try
+            {
                 // accept() to receive the next connection
-                Socket socket = serverSocket.accept();
+                Socket socket = serverSocket.accept( );
 
                 // Pass the socket to RequestHandler thread
-                RequestHandler requestHandler = new RequestHandler(socket);
-                requestHandler.start();
-            } catch (IOException e) {
-                e.printStackTrace();
+                RequestHandler requestHandler = new RequestHandler( socket );
+                requestHandler.start( );
+            }
+
+            catch ( IOException e )
+            {
+                e.printStackTrace( );
             }
         }
     }
 
-    public static void main( String[] args ) {
-        if (args.length == 0) {
-            System.out.println("Usage: WordleServer <port>");
-            System.exit(0);
+    public static void main( String[] args )
+    {
+        if ( args.length == 0 ) {
+            System.out.println( "Usage: WordleServer <port>" );
+            System.exit( 0 );
         }
-        int port = Integer.parseInt(args[0]);
-        System.out.println("Start server on port: " + port);
+        int port = Integer.parseInt( args[0] );
+        System.out.println( "Start server on port: " + port );
 
         // display server address
         // https://mkyong.com/java/how-to-get-ip-address-in-java/#:~:text=In%20Java%2C%20you%20can%20use,Server%20running%20the%20Java%20app.
-        try {
-            InetAddress ip = InetAddress.getLocalHost();
-            System.out.println("Current Server IP address : " + ip.getHostAddress());
-        } catch (UnknownHostException e) {
+        try
+        {
+            InetAddress ip = InetAddress.getLocalHost( );
+            System.out.println( "Current Server IP address : " + ip.getHostAddress( ) );
+        }
+
+        catch ( UnknownHostException e )
+        {
             e.printStackTrace();
         }
 
-        WordleServer server = new WordleServer(port);
-        server.startServer();
-        System.out.println("\nServer started successfully\n");
+        WordleServer server = new WordleServer( port );
+        server.startServer( ) ;
+        System.out.println( "\nServer started successfully\n" );
 
-        server.stopServer();
+        server.stopServer( );
     }
 }
 
-class RequestHandler extends Thread {
-
+class RequestHandler extends Thread
+{
     // method to intialize socket
     private Socket socket;
-    RequestHandler (Socket socket) {
-        this.socket = socket;
-
-    }
+    RequestHandler ( Socket socket ) { this.socket = socket; }
 
     // method to handle rotation
     // Resource: https://stackoverflow.com/questions/19108737/java-how-to-implement-a-shift-cipher-caesar-cipher
@@ -111,13 +127,14 @@ class RequestHandler extends Thread {
     }
 
     @Override
-    public void run() {
+    public void run( )
+    {
         try {
-            System.out.println("Received a connection");
+            System.out.println( "Received a connection" );
 
             // get streams from client
-            BufferedReader in = new BufferedReader( new InputStreamReader( socket.getInputStream() ) );
-            PrintWriter out = new PrintWriter( socket.getOutputStream() );
+            BufferedReader in = new BufferedReader( new InputStreamReader( socket.getInputStream( ) ) );
+            PrintWriter out = new PrintWriter( socket.getOutputStream( ) );
 
             printTime();
 
@@ -127,7 +144,8 @@ class RequestHandler extends Thread {
             String line = in.readLine();
             String finalWord;
 
-            while (line != null && line.length() > 0) {
+            while ( line != null && line.length() > 0 )
+            {
 
                 finalWord = wordle(line);   // process line
 
@@ -141,7 +159,10 @@ class RequestHandler extends Thread {
             in.close();
             out.close();
             socket.close();
-        } catch (Exception e) {
+        }
+
+        catch ( Exception e )
+        {
             e.printStackTrace();
         }
     }
@@ -159,26 +180,30 @@ class RequestHandler extends Thread {
         // Reference: https://crunchify.com/how-to-get-server-ip-address-and-hostname-in-java/
         InetAddress ip;
         String hostname;
-        try {
+        try
+        {
             ip = InetAddress.getLocalHost();
             hostname = ip.getHostName();
             System.out.println("Client current IP address : " + ip);
             System.out.println("Client current Hostname : " + hostname);
 
-        } catch (UnknownHostException e) {
+        }
 
+        catch ( UnknownHostException e )
+        {
             e.printStackTrace();
         }
     }
 
     // method to check if str is a word and output the correct syntax
-    // TODO: add library search
-    // TODO: add GUI
-    private static String wordle(String str) {
+    private static String wordle( String str ) throws FileNotFoundException {
+        String word = str.strip( );
 
-        if ( str.equalsIgnoreCase("wordle" ) )
+        // TODO: add library search
+
+        if ( isWord( word ) )
         {
-            return str;
+            return word;
         }
 
         else
@@ -205,6 +230,23 @@ class RequestHandler extends Thread {
 //            strBuilder.append(c);
 //        }
 //        return strBuilder.toString();
+    }
+
+    private static boolean isWord( String searchStr ) throws FileNotFoundException
+    {
+        Scanner scan = new Scanner( new File( "WordBank.txt" ) );
+
+        while( scan.hasNext( ) )
+        {
+            String line = scan.nextLine( ).toLowerCase( ).toString( );
+            if ( line.equals( searchStr ) )
+            {
+                System.out.println( "\nUser word was found in WordBank.txt\n");
+                return true;
+            }
+        }
+        System.out.println( "\nUser word was NOT found in WordBank.txt\n");
+        return false;
     }
 
 }

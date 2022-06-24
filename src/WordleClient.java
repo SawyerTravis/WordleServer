@@ -34,14 +34,16 @@ public class WordleClient {
             System.out.println("Would you like to play Wordle? (Enter Y or N) \n");
             System.out.flush();
             userIn = stdIn.readLine();
+            String answer = userIn.strip();
 
             // check for valid user input
-            while ( !( userIn.equalsIgnoreCase("Y") )
-                    && !( userIn.equalsIgnoreCase("N") ) )
+            while ( !( answer.equalsIgnoreCase("Y") )
+                    && !( answer.equalsIgnoreCase("N") ) )
             {
                 System.out.println( "Invalid answer: Please enter Y or N) \n");
                 System.out.flush();
                 userIn = stdIn.readLine();
+                answer = userIn.strip();
             }
 
             if ( userIn.equalsIgnoreCase( "N" ) )
@@ -62,7 +64,7 @@ public class WordleClient {
             int count = 0;
 
             // begin reading string inputs from user
-            while ( count < 5 ) {
+            while ( count < 6 ) {
                 // prompt user for text in next while loop
                 System.out.println("Enter a five letter word: ");
                 System.out.flush();
@@ -82,12 +84,13 @@ public class WordleClient {
 
                 if ( response.equalsIgnoreCase("invalid") )
                 {
-                    System.out.println("Wordle Server: " + response + " is not a word, please try again \n");
+                    System.out.println("Wordle Server: " + userIn + " is not a word, please try again \n");
                 }
 
+                // TODO: add display for valid guesses
                 else
                 {
-                    System.out.println("Wordle Server: " + response + "\n");
+                    System.out.println("Wordle Server: " + userIn + "\n");
                     ++count;
                 }
             }
