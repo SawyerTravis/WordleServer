@@ -1,18 +1,17 @@
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.Buffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class WordleServer extends Thread
 {
@@ -102,30 +101,6 @@ class RequestHandler extends Thread
     private Socket socket;
     RequestHandler ( Socket socket ) { this.socket = socket; }
 
-    // method to handle rotation
-    // Resource: https://stackoverflow.com/questions/19108737/java-how-to-implement-a-shift-cipher-caesar-cipher
-    private static String cipher(String str, int shift) {
-        StringBuilder strBuilder = new StringBuilder();
-        char c;
-        int length = str.length();
-        for (int i = 0; i < length; i++) {
-            c = str.charAt(i);
-            // if c is letter ONLY then shift them, else directly add it
-            if (Character.isLetter(c)) {
-                c = (char) (str.charAt(i) + shift);
-                // checking case or range check is important, just if (c > 'z'
-                // || c > 'Z')
-                // will not work
-                if ((Character.isLowerCase(str.charAt(i)) && c > 'z') || (Character.isUpperCase(str.charAt(i)) && c > 'Z')) {
-
-                    c = (char) (str.charAt(i) - (26 - shift));
-                }
-            }
-            strBuilder.append(c);
-        }
-        return strBuilder.toString();
-    }
-
     @Override
     public void run( )
     {
@@ -136,23 +111,27 @@ class RequestHandler extends Thread
             BufferedReader in = new BufferedReader( new InputStreamReader( socket.getInputStream( ) ) );
             PrintWriter out = new PrintWriter( socket.getOutputStream( ) );
 
-            printTime();
+            printTime( );
 
-            printIP();
+            printIP( );
 
-            // read in line from the user to be rotated
+            //String answer = pickAnswer( );
+            String answer = "bolos";
+            System.out.println( "Answer: " + answer + "\n" );
+            System.out.flush();
+
             String line = in.readLine();
             String finalWord;
 
             while ( line != null && line.length() > 0 )
             {
 
-                finalWord = wordle(line);   // process line
+                finalWord = wordle( line, answer );   // process line
 
-                out.println(finalWord);     // output the word to client
-                out.flush();
+                out.println( finalWord );     // output the word to client
+                out.flush( );
 
-                line = in.readLine();       // prompt again
+                line = in.readLine( );       // prompt again
             }
 
             // close connection
@@ -196,40 +175,23 @@ class RequestHandler extends Thread
     }
 
     // method to check if str is a word and output the correct syntax
-    private static String wordle( String str ) throws FileNotFoundException {
+    private static String wordle( String str, String answer ) throws FileNotFoundException {
         String word = str.strip( );
 
-        // TODO: add library search
-
-        if ( isWord( word ) )
+        if ( word.equalsIgnoreCase( answer ) )
         {
-            return word;
+            return "correct";
+        }
+
+        else if ( isWord( word ) )
+        {
+            return answer;
         }
 
         else
         {
             return "invalid";
         }
-
-//        StringBuilder strBuilder = new StringBuilder();
-//        char c;
-//        int length = str.length();
-//        for (int i = 0; i < length; i++) {
-//            c = str.charAt(i);
-//            // if c is letter ONLY then shift them, else directly add it
-//            if (Character.isLetter(c)) {
-//                c = (char) (str.charAt(i) + shift);
-//                // checking case or range check is important, just if (c > 'z'
-//                // || c > 'Z')
-//                // will not work
-//                if ((Character.isLowerCase(str.charAt(i)) && c > 'z') || (Character.isUpperCase(str.charAt(i)) && c > 'Z')) {
-//
-//                    c = (char) (str.charAt(i) - (26 - shift));
-//                }
-//            }
-//            strBuilder.append(c);
-//        }
-//        return strBuilder.toString();
     }
 
     private static boolean isWord( String searchStr ) throws FileNotFoundException
@@ -238,7 +200,7 @@ class RequestHandler extends Thread
 
         while( scan.hasNext( ) )
         {
-            String line = scan.nextLine( ).toLowerCase( ).toString( );
+            String line = scan.nextLine( ).toLowerCase( );
             if ( line.equals( searchStr ) )
             {
                 System.out.println( "\nUser word was found in WordBank.txt\n");
@@ -249,4 +211,26 @@ class RequestHandler extends Thread
         return false;
     }
 
+    private static String pickAnswer( ) throws FileNotFoundException
+    {
+        Random random = new Random();
+        File file = new File( "WordleBank.txt" );
+        int rand_num = ThreadLocalRandom.current().nextInt( 0, 5757 );
+
+        try ( BufferedReader br = new BufferedReader( new FileReader( "WordBank.txt" ) ) )
+        {
+            for ( int i = 0; i < rand_num; i++ )
+            {
+                br.readLine();
+            }
+            return br.readLine();
+        }
+
+        catch ( IOException e )
+        {
+            System.out.println( e );
+        }
+
+        return "Error in pickAnswer";
+    }
 }
