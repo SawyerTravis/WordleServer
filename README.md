@@ -1,6 +1,6 @@
 # WordleServer
 
-Wordle is a popular word game currently hosted at ...
+Wordle is a popular word game currently hosted at [https://www.nytimes.com/games/wordle/index.html]
 
 This project is a CLI version of the game that can be played as many times as desired
 
@@ -12,7 +12,7 @@ This project is a CLI version of the game that can be played as many times as de
 * A correct letter in the wrong place is displayed as ```{L}```
 * An incorrect letter is displayed as ```|L|```
 * Letters can be used more than once.
-* Unlike the real Wordle, plurals can be used *Evil Laugh*
+* Unlike the real Wordle, plurals can be used ( sorry lol )
 
 # Install
 
@@ -29,7 +29,7 @@ git clone https://github.com/SawyerTravis/WordleServer.git
 # Starting Wordle Server...
 
 First, using the original terminal, navigate into the src directory 
-(You will need to repeat this step in a second terminal window for the client later on)
+* You will need to repeat this step in a second terminal window for the client later on
 
 ```
 cd Wordle/src
@@ -85,7 +85,7 @@ Would you like to play Wordle? (Enter Y or N)
 ````
 
 The server should display the following...
-( Hostname will actually be displayed ) 
+* Hostname will actually be displayed  
 ```
 Received a connection
 Connection time: 07/07/2022 13:59:52
