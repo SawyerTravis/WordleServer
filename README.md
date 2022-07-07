@@ -1,4 +1,4 @@
-# WordleServer
+# Wordle Server
 
 Wordle is a popular word game currently playable at https://www.nytimes.com/games/wordle/index.html
 
