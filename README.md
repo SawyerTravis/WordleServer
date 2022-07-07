@@ -95,7 +95,8 @@ Client current Hostname : Hostname
 
 You are now ready to play Wordle! 
 
-Once your game ends, you can follow these steps again to connect another client 
+* All user inputs go through the client (typing in the server won't do anything)
+* Once your game ends, you can follow these steps again to connect another client 
 * The server does support multiple clients for "multiplayer" ;)  
 
 
