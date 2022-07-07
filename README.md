@@ -1,8 +1,8 @@
 # WordleServer
 
-Wordle is a popular word game currently hosted at [https://www.nytimes.com/games/wordle/index.html]
+Wordle is a popular word game currently playable at https://www.nytimes.com/games/wordle/index.html
 
-This project is a CLI version of the game that can be played as many times as desired
+This project is a CLI version of the game that can be played as many times as desired.
 
 # Rules 
 
