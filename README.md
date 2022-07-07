@@ -6,6 +6,6 @@ Client and Server with Wordle gameplay
 
 Clone repo into desired directory 
 
-```git
-clone https://github.com/SawyerTravis/WordleServer.git
+```
+git clone https://github.com/SawyerTravis/WordleServer.git
 ```
