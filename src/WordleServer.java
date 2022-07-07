@@ -3,14 +3,12 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.Buffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 import java.util.Random;
-import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class WordleServer extends Thread
@@ -47,7 +45,8 @@ public class WordleServer extends Thread
     public void run( )
     {
         running = true;
-        while( running ) {
+        while( running )
+        {
             try
             {
                 // accept() to receive the next connection
@@ -67,10 +66,12 @@ public class WordleServer extends Thread
 
     public static void main( String[] args )
     {
-        if ( args.length == 0 ) {
+        if ( args.length == 0 )
+        {
             System.out.println( "Usage: WordleServer <port>" );
             System.exit( 0 );
         }
+
         int port = Integer.parseInt( args[0] );
         System.out.println( "Start server on port: " + port );
 
@@ -135,22 +136,22 @@ class RequestHandler extends Thread
             }
 
             // close connection
-            in.close();
-            out.close();
-            socket.close();
+            in.close( );
+            out.close( );
+            socket.close( );
         }
 
         catch ( Exception e )
         {
-            e.printStackTrace();
+            e.printStackTrace( );
         }
     }
 
     public static void printTime( )
     {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();
-        System.out.println("Connection time: " + formatter.format(date));
+        SimpleDateFormat formatter = new SimpleDateFormat( "dd/MM/yyyy HH:mm:ss" );
+        Date date = new Date( );
+        System.out.println( "Connection time: " + formatter.format( date ) );
     }
 
     public static void printIP( )
@@ -221,9 +222,9 @@ class RequestHandler extends Thread
         {
             for ( int i = 0; i < rand_num; i++ )
             {
-                br.readLine();
+                br.readLine( );
             }
-            return br.readLine();
+            return br.readLine( );
         }
 
         catch ( IOException e )
