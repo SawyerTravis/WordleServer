@@ -116,9 +116,9 @@ class RequestHandler extends Thread
 
             printIP( );
 
-            //String answer = pickAnswer( );
-            String answer = "bolos";
-            System.out.println( "Answer: " + answer + "\n" );
+            String answer = pickAnswer( );
+            //String answer = "bolos";
+            //System.out.println( "Answer: " + answer + "\n" );
             System.out.flush();
 
             String line = in.readLine();
