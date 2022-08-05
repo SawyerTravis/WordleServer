@@ -60,8 +60,8 @@ public class WordleClient
                 stdIn.close( );
                 socket.close( );
 
-                // exit
-                System.exit( 0 ) ;
+                // uncomment to stop server when client quits
+                //System.exit( 0 ) ;
             }
 
             int count = 0;
@@ -128,7 +128,7 @@ public class WordleClient
             socket.close();
 
             // exit
-            System.exit(0);
+            //System.exit(0);
 
         } catch (IOException exc) {     // handle error exception
             System.out.println("I/O error: " + exc.getMessage());
